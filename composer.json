@@ -1,0 +1,7 @@
+{
+    "name": "M. Lubimcev php_diplom",
+    "description": "php-diplom Netology PHP-22 group",
+    "require": {
+        "twig/twig": "^1.35.3"
+    }
+}
