@@ -113,4 +113,20 @@ class User extends Model
         }
     }
     
+        public function getByRole($role)
+    {
+        $fields = 'id AS id,
+                   login,
+                   password,
+                   email,
+                   is_admin';
+        $this -> recordset = $this -> getRecordByFieldValue($this -> table_name, $fields, 'is_admin', $role);
+        if (empty($this -> recordset)) {
+            return NULL;
+        } else {
+            return $this -> recordset[0];
+        }
+    }
+
+    
 }//end class User (Model)

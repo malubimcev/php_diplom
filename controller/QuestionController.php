@@ -49,6 +49,7 @@ class QuestionController extends Controller
     public function getList()
     {
         $question = new Question();
+        $this -> questions = $question -> getList();
         if (!empty($this -> questions)) {
             $view = new QuestionView();
             $view -> render($this -> questions);

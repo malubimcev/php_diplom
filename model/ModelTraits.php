@@ -24,26 +24,6 @@
     {
         use DatabaseTrait;
         
-        public function getRecord($id, $table, $fields)
-        {
-            $record = [];
-            if (empty($fields)) {
-                $fields = '*';
-            }
-            $request = 'SELECT ';
-            $request .= $fields;
-            $request .= ' FROM ';
-            $request .=  $table;
-            $request .=' WHERE id = :id';
-            $request_params = [':id' => $id];
-            $record = $this -> doRequest($request, $request_params);
-            if (!empty($record)) {
-                return $record;
-            } else {
-                return FALSE;
-            }
-        }
-        
         public function isExistRecord($id, $table)
         {
             $fields = 'id AS id ';
@@ -91,13 +71,7 @@
             }
         }
         
-    }//end trait RecordsTrait
-    
-    trait NameTrait
-    {
-        use DatabaseTrait;
-        
-        public function getRecordByName($name, $table, $fields)
+        public function getRecordByFieldValue($table, $fields, $target_field = 'id', $value = '')
         {
             $record = [];
             if (empty($fields)) {
@@ -107,14 +81,31 @@
             $request .= $fields;
             $request .= ' FROM ';
             $request .=  $table;
-            $request .=' WHERE name = :name';
-            $request_params = [':name' => $name];
+            $request .=' WHERE ';
+            $request .= $target_field .'=:'.$value;
+            $request_params = [':'.$value => $value];
             $record = $this -> doRequest($request, $request_params);
             if (!empty($record)) {
                 return $record;
             } else {
                 return FALSE;
             }
+        }
+        
+        public function getRecord($id, $table, $fields)
+        {
+            return $record = $this -> getRecordByFieldValue($table, $fields, 'id', $id);
+        }
+        
+    }//end trait RecordsTrait
+    
+    trait NameTrait
+    {
+        use DatabaseTrait;
+        
+        public function getRecordByName($name, $table, $fields)
+        {
+            return $record = $this -> getRecordByFieldValue($table, $fields, 'name', $name);
         }
                 
     }//end trait NameTrait

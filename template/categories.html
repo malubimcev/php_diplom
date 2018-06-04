@@ -1,7 +1,5 @@
-<div class="categories">
-    {% for cat in categories %}
-    <ul>
-        <li>{{ cat.name }}</li>
-    </ul>
-    {% endfor %}
-</div>
+{% for cat in categories %}
+<ul>
+    <li><a href="?/category/getById/{{ cat.id }}">{{ cat.name }}</a></li>
+</ul>
+{% endfor %}

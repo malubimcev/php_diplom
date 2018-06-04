@@ -6,6 +6,30 @@ class Question extends Model
 {
     private $recordset = NULL;
     private $table_name = 'questions';
+
+private $testQuestions = [
+    [
+        'id' => 1,
+        'description' => 'quest1',
+        'category_id' => '1',
+        'user_id' => '2',
+        'status' => '0'
+    ],
+    [
+        'id' => 2,
+        'description' => 'quest2',
+        'category_id' => '2',
+        'user_id' => '1',
+        'status' => '1'
+    ],
+    [
+        'id' => 3,
+        'description' => 'quest3',
+        'category_id' => '1',
+        'user_id' => '1',
+        'status' => '1'
+    ]
+];
     
     public function add($data) 
     {
@@ -64,6 +88,7 @@ class Question extends Model
     
     public function getList()
     {
+return $this->testQuestions;//=============================================================
         $fields = 'id AS id,
                     category_id,
                     user_id,

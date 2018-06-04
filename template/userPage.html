@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
         <meta charset="UTF-8">
-        <title>===</title>
+        <title>
+            {% include 'title.html' %}
+        </title>
         <link rel="stylesheet" href="css/styles.css"/>
     </head>
     <body>
         <header>
-            {% include 'adminHeader.html' %}
+            {% include 'userHeader.html' %}
         </header>
         <section class="main-container">
-            {% include 'userList.html' %}
+            {% include 'userContent.html' %}
         </section>
         <footer>
             {% include 'footer.html' %}

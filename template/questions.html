@@ -1,4 +1,3 @@
-<h2>Добро пожаловать, {{ authorized_user }}!</h2>
 <div class="logout">
     <a class="logout-button" href="?/user/logout">Выход</a>
 </div>
@@ -8,17 +7,6 @@
         <form action="?/question/add" method="POST">
             <input type="text" name="description" placeholder="Текст вопроса" value="">
             <input type="submit" name="save" value="Добавить">
-        </form>
-    </div>
-    <div class="form-container">
-        <form action="?/question/sort" method="POST">
-            <label for="sort_by">Сортировать по:</label>
-            <select name="sort_by">
-                <option value="date_added">Дате добавления</option>
-                <option value="status">Статусу</option>
-                <option value="description">Описанию</option>
-            </select>
-            <input type="submit" name="sort" value="Отсортировать">
         </form>
     </div>
 
@@ -36,7 +24,7 @@
             {% for question in questions %}
             <tr class="table-row">
 
-                <td class="column-description">{{ question.description }}</td>
+                <td class="column-description">{{ question.description|e }}</td>
                 <td class="column-date">{{ question.date_added }}</td>
                 <td class="column-status">
                     {% if question.status == 1 %}
@@ -46,9 +34,9 @@
                     {% endif %}
                 </td>
                 <td class="column-action">
-                    <a href="?/question/delete/id={{ question.id }}">Удалить</a>
+                    <a href="?/question/delete/id/{{ question.id }}">Удалить</a>
                 </td>
-                <td class="column-author">{{ question.user_name }}</td>
+                <td class="column-author">{{ question.user_name|e }}</td>
             </tr>
             {% endfor %}
         </tbody>

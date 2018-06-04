@@ -9,6 +9,15 @@ class Category extends Model
     private $category = NULL;
     private $table_name = 'categories';
     
+private $testCategories = [
+    ['id' => 1,
+     'name' => 'cat1'],
+    ['id' => 2,
+     'name' => 'cat2'],
+    ['id' => 3,
+     'name' => 'cat3']        
+];
+    
     public function add($data) 
     {
         if ($this -> isExistRecord($data['id'], $this -> table_name)) {
@@ -31,7 +40,7 @@ class Category extends Model
         return $this -> deleteRecord($id, $this -> table_name);
     }
     
-    public function update($data) 
+    public function update($id, $data) 
     {
         if ($this -> isExistRecord($id, $this -> table_name)) {
             $request = 'UPDATE
@@ -53,6 +62,7 @@ class Category extends Model
     
     public function getList()
     {
+return $this->testCategories;//============================        
         $fields = 'id AS id,
                    name';
         $this -> recordset = $this -> getAllRecords($this -> table_name, $fields, 'name', 'ASC');

@@ -50,10 +50,10 @@ class CategoryController extends Controller
     public function getList()
     {
         $category = new Category();
-        $this -> categories = $task -> getList();
-        if (!empty($this -> tasks)) {
+        $this -> categories = $category -> getList();
+        if (!empty($this -> categories)) {
             $view = new CategoryView();
-            $view -> render($this -> tasks);
+            $view -> render($this -> categories);
         }
         $category = NULL;
     }

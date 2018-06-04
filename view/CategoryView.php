@@ -1,9 +1,9 @@
 <?php
 require_once 'view/View.php';
 
-class QuestionView extends View
+class CategoryView extends View
 {
-    private $template = 'questions.html';
+    private $template = 'adminPage.html';
     
     public function __construct($template = '')
     {
@@ -15,7 +15,7 @@ class QuestionView extends View
     
     public function render($data)
     {
-        parent::render($this -> template, array('questions' => $data));
+        parent::render($this -> template, array('categories' => $data));
     }
 
-}//end class QuestionView
+}//end class CategoryView
