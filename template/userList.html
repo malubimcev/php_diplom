@@ -1,9 +1,41 @@
-<div>
-    <p>users try</p>
-    {% for user in users %}
-        <p>{{ user.login }}</p>
-        <p>{{ user.password }}</p>
-        <p>{{ user.email }}</p>
-        <p>{{ user.is_admin }}</p>
-    {% endfor %}
+<div class="user-list">
+    <form method="POST" action="?/user/add" class="user-input-form">
+        <input type="text" name="user_name" placeholder="Имя пользователя" value=""> 
+        <input type="password" name="user_password" placeholder="Пароль" value="">
+        <input type="text" name="email" placeholder="E-mail" value="">
+        <input type="text" name="is_admin" value="1">
+        <input type="submit" name="login" value="Вход" class="button select-button">
+        <input type="submit" name="register" value="Регистрация" class="button select-button">
+    </form>
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-login">Имя</td>
+                <td class="column-password">Пароль</td>
+                <td class="column-email">E-mail</td>
+                <td class="column-is_admin">Администратор</td>
+                <td class="column-action">Действия</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr class="table-row">
+                <td class="column-login">{{ user.login|e }}</td>
+                <td class="column-password">{{ user.password|e }}</td>
+                <td class="column-email">{{ user.email|e }}</td>
+                <td class="column-is_admin">
+                    {% if user.is_admin == 1 %}
+                        <span class="">администратор</span>
+                    {% else %}
+                        <span class="">пользователь</span>
+                    {% endif %}
+                </td>
+                <td class="column-action">
+                    <a href="?/user/update/id/{{ user.id }}">Редактировать</a>
+                    <a href="?/user/delete/id/{{ user.id }}">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>

@@ -4,7 +4,7 @@ require_once 'view/View.php';
 class UserView extends View
 {
     //private $template = 'users.php';
-    private $template = 'users.html';
+    private $template = 'adminPage.html';
     
     public function __construct()
     {

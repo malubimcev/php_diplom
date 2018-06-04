@@ -11,26 +11,34 @@ body {
     top: 0;
     display: block;
     width: 100%;
-    height: 30px;
+    height: 40px;
     background-color: #aaccaa;
 }
 
 .menu-list {
     display: block;
     width: 100%;
+    text-align: center;
 }
 
 .menu-item {
     display: inline-block;
     width: 20%;
-    height: 100%;
+    height: 80%;
     text-transform: uppercase;
+    
+}
+
+.menu-item a {
+    text-decoration: none;
+    color: white;
 }
 
 .main-container {
     display: block;
     min-width: 820px;
     max-width: 1600px;
+    top: 40px;
     margin: 0 auto; 
     padding: 10px;
     background-color: #eeeeee;
@@ -43,7 +51,7 @@ body {
     padding: 2px;
 }
 
-.part-1, .part-2 {
+.question-list {
     display: block;
     width: 100%;
     margin: 5px auto; 
@@ -119,28 +127,20 @@ td {
 }
 
 .column-action {
-    width: 100px;
+    width: 200px;
 }
 
 .column-status {
-    width: 100px;
-}
-
-.column-assigned_user {
     width: 150px;
 }
 
 .column-author {
-    width: 100px;
-}
-
-.column-assign {
-    width: 250px;
+    width: 200px;
 }
 
 .column-description {
     min-width: 200px;
-    max-width: 340px;
+    max-width: 400px;
 }
 
 .logout-button {

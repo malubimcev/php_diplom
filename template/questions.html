@@ -1,7 +1,4 @@
-<div class="logout">
-    <a class="logout-button" href="?/user/logout">Выход</a>
-</div>
-<div class="part-1">
+<div class="question-list">
     <h3>Список вопросов</h3>
     <div class="form-container">
         <form action="?/question/add" method="POST">
@@ -23,17 +20,21 @@
         <tbody>
             {% for question in questions %}
             <tr class="table-row">
-
                 <td class="column-description">{{ question.description|e }}</td>
                 <td class="column-date">{{ question.date_added }}</td>
                 <td class="column-status">
                     {% if question.status == 1 %}
-                        <span class="">...</span>
+                        <span class="">опубликован</span>
+                    {% elseif  question.status == 2 %}
+                        <span class="">скрыт</span>
                     {% else %}
-                        <span class="">...</span>
+                        <span class="">ожидает ответа</span>
                     {% endif %}
                 </td>
                 <td class="column-action">
+                    <a href="?/answer/add/question_id/{{ question.id }}">Ответить</a>
+                    <a href="?/question/publicate/id/{{ question.id }}">Опубликовать</a>
+                    <a href="?/question/hide/id/{{ question.id }}">Скрыть</a>
                     <a href="?/question/delete/id/{{ question.id }}">Удалить</a>
                 </td>
                 <td class="column-author">{{ question.user_name|e }}</td>

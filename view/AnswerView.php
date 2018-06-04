@@ -1,7 +1,7 @@
 <?php
 require_once 'view/View.php';
 
-class QuestionView extends View
+class AnswerView extends View
 {
     private $template = 'adminPage.html';
     
@@ -18,4 +18,4 @@ class QuestionView extends View
         parent::render($this -> template, array('questions' => $data));
     }
 
-}//end class QuestionView
+}//end class AnswerView

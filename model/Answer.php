@@ -6,20 +6,37 @@ class Answer extends Model
 {
     private $recordset = NULL;
     private $table_name = 'answers';
+
+private $testAnswers = [
+    [
+        'id' => 1,
+        'description' => 'answer1',
+        'question_id' => '1'
+    ],
+    [
+        'id' => 2,
+        'description' => 'answer2',
+        'question_id' => '1'
+    ],
+    [
+        'id' => 3,
+        'description' => 'answer3',
+        'question_id' => '2'
+    ]
+];
+    
     
     public function add($data) 
     {
         if (!$this -> isExistRecord($data['id'], $this -> table_name)) {
             $request = 'INSERT INTO answers (
-                            questions_id,
-                            description,
-                            status)
+                            question_id,
+                            description)
                         VALUES (
-                            :category_id,
-                            :description,
-                            0)';
+                            :question_id,
+                            :description)';
             $request_params = [
-                ':category_id' => $data['category_id'],
+                ':question_id' => $data['question_id'],
                 ':description' => $data['description']
             ];
             $this -> doRequest($request, $request_params);
@@ -40,13 +57,12 @@ class Answer extends Model
             $request = 'UPDATE
                             answers
                         SET
-                            category_id=:category_id,
-                            description=:description,
-                            status=:status
+                            question_id=:question_id,
+                            description=:description
                         WHERE
                             id=:id';
             $params = [
-                ':category_id' => $data['category_id'],
+                ':question_id' => $data['question_id'],
                 ':description' => $data['description'],
                 ':status' => $data['status']
             ];
@@ -59,12 +75,12 @@ class Answer extends Model
     
     public function getList()
     {
+return $this->testAnswers;//=============================================================
         $fields = 'id AS id,
-                    category_id,
+                    question_id,
                     description,
-                    status,
                     date_added';
-        $this -> recordset = $this -> getAllRecords($this -> table_name, $fields, 'login', 'ASC');
+        $this -> recordset = $this -> getAllRecords($this -> table_name, $fields, 'question_id', 'ASC');
         if (!empty($this -> recordset)) {
             return $this -> recordset;
         } else {
@@ -93,7 +109,7 @@ class Answer extends Model
                         answers.description AS description,
                         answers.date_added AS date_added,
                     FROM
-                        questions 
+                        answers 
                     INNER JOIN
                         questions
                     ON
