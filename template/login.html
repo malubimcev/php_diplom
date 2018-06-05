@@ -1,13 +1,12 @@
 <h2>Авторизация</h2>
 <div class="result">
-    {{ result }}
+    {{ users.result }}
 </div>
 <div class="form-container">
     <form action="?/user/login" method="POST" class="user-input-form">
         <input type="text" name="user_name" placeholder="Имя пользователя" value=""> 
         <input type="password" name="user_password" placeholder="Пароль" value="">
         <input type="text" name="email" placeholder="E-mail" value="">
-        <input type="text" name="is_admin" value="1">
         <input type="submit" name="login" value="Вход" class="button select-button">
         <input type="submit" name="register" value="Регистрация" class="button select-button">
     </form><br>

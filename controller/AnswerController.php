@@ -9,6 +9,7 @@ class AnswerController extends Controller
     private $answers = [];//список вопросов
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
+    private $viewTemplate = 'answer.twig';
     
     public function add($params)
     {
@@ -51,7 +52,7 @@ class AnswerController extends Controller
         $answer = new Answer();
         $this -> answers = $answer -> getList();
         if (!empty($this -> answers)) {
-            $view = new AnswerView();
+            $view = new AnswerView($this -> viewTemplate);
             $view -> render($this -> answers);
         }
         $answer = NULL;

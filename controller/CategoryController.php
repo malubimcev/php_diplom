@@ -9,6 +9,7 @@ class CategoryController extends Controller
     private $categories = [];//список вопросов
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
+    private $viewTemplate = 'categoriesAdmin.twig';
     
     public function add($params)
     {
@@ -52,7 +53,7 @@ class CategoryController extends Controller
         $category = new Category();
         $this -> categories = $category -> getList();
         if (!empty($this -> categories)) {
-            $view = new CategoryView();
+            $view = new CategoryView($this -> viewTemplate);
             $view -> render($this -> categories);
         }
         $category = NULL;

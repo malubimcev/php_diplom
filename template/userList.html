@@ -2,10 +2,10 @@
     <form method="POST" action="?/user/add" class="user-input-form">
         <input type="text" name="user_name" placeholder="Имя пользователя" value=""> 
         <input type="password" name="user_password" placeholder="Пароль" value="">
-        <input type="text" name="email" placeholder="E-mail" value="">
-        <input type="text" name="is_admin" value="1">
-        <input type="submit" name="login" value="Вход" class="button select-button">
-        <input type="submit" name="register" value="Регистрация" class="button select-button">
+        <input type="email" name="email" placeholder="E-mail" value="">
+        <label for="is_admin">Администратор</label>
+        <input type="checkbox" name="is_admin" value="0">
+        <input type="submit" name="update" value="Добавить" class="button select-button">
     </form>
     <table class="table">
         <thead class="table-head">
@@ -31,7 +31,7 @@
                     {% endif %}
                 </td>
                 <td class="column-action">
-                    <a href="?/user/update/id/{{ user.id }}">Редактировать</a>
+                    <a href="?/user/update/id/{{ user.id }}">Сохранить</a>
                     <a href="?/user/delete/id/{{ user.id }}">Удалить</a>
                 </td>
             </tr>

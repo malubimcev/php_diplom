@@ -3,11 +3,13 @@ require_once 'view/View.php';
 
 class UserView extends View
 {
-    //private $template = 'users.php';
     private $template = 'adminPage.html';
     
-    public function __construct()
+    public function __construct($template = '')
     {
+        if (!empty($template)) {
+            $this -> template = $template;
+        }
         parent::__construct();
     }
     

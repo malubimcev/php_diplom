@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}
+            {% endblock %}
+        </title>
+        <link rel="stylesheet" href="css/styles.css"/>
+    </head>
+    <body>
+        <header class="main-header">
+            {% block header %}
+            {% endblock %}
+        </header>
+        <section class="main-container">
+            {% block content %}
+            {% endblock %}
+        </section>
+        <footer>
+            {% include 'footer.html' %}
+        </footer>
+    </body>
+</html>

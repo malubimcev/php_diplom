@@ -1,0 +1,36 @@
+<div class="category-list">
+    <h3>Категории</h3>
+    <div class="form-container">
+        <form action="?/category/add" method="POST">
+            <input type="text" name="description" placeholder="Название" value="">
+            <input type="submit" name="save" value="Добавить">
+        </form>
+    </div>
+
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Название</td>
+                <td class="column-status">Всего вопросов</td>
+                <td class="column-status">Опубликовано</td>
+                <td class="column-status">Без ответов</td>
+                <td class="column-action">Действия</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr class="table-row">
+                <td class="column-description">{{ category.description|e }}</td>
+                <td class="column-status">{{ category.questions_count|e }}</td>
+                <td class="column-status">{{ category.publicated|e }}</td>
+                <td class="column-status">{{ category.unanswered|e }}</td>
+                <td class="column-action">
+                    <a href="?/category/delete/id/{{ category.id }}">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

@@ -113,7 +113,7 @@ class User extends Model
         }
     }
     
-        public function getByRole($role)
+    public function getByRole($role)
     {
         $fields = 'id AS id,
                    login,
@@ -127,6 +127,5 @@ class User extends Model
             return $this -> recordset[0];
         }
     }
-
     
 }//end class User (Model)

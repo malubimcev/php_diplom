@@ -15,7 +15,7 @@ class AnswerView extends View
     
     public function render($data)
     {
-        parent::render($this -> template, array('questions' => $data));
+        parent::render($this -> template, array('answers' => $data));
     }
 
 }//end class AnswerView
