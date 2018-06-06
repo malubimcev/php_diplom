@@ -4,8 +4,6 @@ require_once 'Model.php';
 
 class User extends Model
 {
-    use NameTrait;
-    
     private $recordset = NULL;
     private $table_name = 'users';
     private $users = [
@@ -26,7 +24,7 @@ class User extends Model
                             :email,
                             :is_admin)';
             $request_params = [
-                ':login' => $data['login'],
+                ':login' => $data['user_name'],
                 ':password' => $data['password'],
                 ':email' => $data['email'],
                 ':is_admin' => $data['is_admin']
@@ -105,10 +103,12 @@ class User extends Model
                    password,
                    email,
                    is_admin';
-        $this -> recordset = $this -> getRecordByName($name, $this -> table_name, $fields);
+        $this -> recordset = $this ->getRecordByFieldValue($this -> table_name, $fields,'login',$name);
+echo '<br>recordset: ';var_dump($this->recordset);echo '===<br>';
         if (empty($this -> recordset)) {
             return NULL;
         } else {
+echo '<br>recordset: ';var_dump($this->recordset);echo '===<br>';
             return $this -> recordset[0];
         }
     }

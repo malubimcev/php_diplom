@@ -1,0 +1,47 @@
+<div class="question-list">
+    <h3>Список вопросов</h3>
+    <div class="form-container">
+        <form action="?/question/add" method="POST">
+            <input type="text" name="description" placeholder="Текст вопроса" value="">
+            <input type="submit" name="save" value="Добавить">
+        </form>
+    </div>
+
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Вопрос</td>
+                <td class="column-date">Дата добавления</td>
+                <td class="column-status">Статус</td>
+                <td class="column-action">Действия</td>
+                <td class="column-author">Автор</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr class="table-row">
+                <td class="column-description">{{ question.description|e }}</td>
+                <td class="column-date">{{ question.date_added }}</td>
+                <td class="column-status">
+                    {% if question.status == 1 %}
+                        <span class="">опубликован</span>
+                    {% elseif  question.status == 2 %}
+                        <span class="">скрыт</span>
+                    {% else %}
+                        <span class="">ожидает ответа</span>
+                    {% endif %}
+                </td>
+                <td class="column-action">
+                    <a href="?/answer/add/question_id/{{ question.id }}">Ответить</a>
+                    <a href="?/question/publicate/id/{{ question.id }}">Опубликовать</a>
+                    <a href="?/question/hide/id/{{ question.id }}">Скрыть</a>
+                    <a href="?/question/delete/id/{{ question.id }}">Удалить</a>
+                </td>
+                <td class="column-author">{{ question.user_name|e }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

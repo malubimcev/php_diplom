@@ -29,8 +29,6 @@ class Database
         try {
             $this -> db = $this -> get_connection();
             $stmt = $this -> db -> prepare($request);
-            
-            echo '<br>';
             foreach ($params as $key => $value) {
                 $stmt -> bindValue($key, $value);
             }

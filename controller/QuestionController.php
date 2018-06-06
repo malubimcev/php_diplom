@@ -9,7 +9,7 @@ class QuestionController extends Controller
     private $questions = [];//список вопросов
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
-    private $viewTemplate = 'questions.twig';
+    private $viewTemplate = '';//имя шаблона для отображения
     
     public function add($params)
     {
@@ -19,7 +19,7 @@ class QuestionController extends Controller
             if (count($this -> errors) == 0) {
                 $question -> add($this -> data);
                 $this -> getList();
-                }
+            }
         }
     }
     
@@ -51,10 +51,10 @@ class QuestionController extends Controller
     {
         $question = new Question();
         $this -> questions = $question -> getList();
-        if (!empty($this -> questions)) {
-            $view = new QuestionView($this->viewTemplate);
+        //if (!empty($this -> questions)) {
+            $view = new QuestionView($this -> viewTemplate);
             $view -> render($this -> questions);
-        }
+        //}
         $question = NULL;
     }
     
@@ -101,6 +101,15 @@ class QuestionController extends Controller
                     break;
             }
         }        
+    }
+
+    public function __construct($adminMode = FALSE)
+    {
+        if ($adminMode) {
+            $this -> viewTemplate = 'questionsAdmin.twig';
+        } else {
+            $this -> viewTemplate = 'questions.twig';
+        }
     }
 
 }//end class QuestionController

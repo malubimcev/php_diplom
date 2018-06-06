@@ -20,7 +20,7 @@
         <tbody>
             {% for category in categories %}
             <tr class="table-row">
-                <td class="column-description">{{ category.description|e }}</td>
+                <td class="column-description">{{ category.name|e }}</td>
                 <td class="column-status">{{ category.questions_count|e }}</td>
                 <td class="column-status">{{ category.publicated|e }}</td>
                 <td class="column-status">{{ category.unanswered|e }}</td>

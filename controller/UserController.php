@@ -1,7 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'model/User.php';
-//require_once 'model/User.php';
+require_once 'controller/QuestionController.php';
 require_once 'view/UserView.php';
 
 class UserController extends Controller {
@@ -53,17 +53,17 @@ class UserController extends Controller {
         $user = new User();
         $this -> data = $user -> getList();
         if (!empty($this -> data)) {
-            $view = new UserView($this->userListPage);
+            $view = new UserView($this -> userListPage);
             $view -> render($this -> data);
         }
     }
     
     public function defaultAction()
     {
-$this -> getList();return;//========================================================================
+//$this -> getList();return;//========================================================================
         $view = new UserView($this -> loginPage);
         $this -> data['result'] = $this -> result;
-        $view ->render($this -> data);
+        $view -> render($this -> data);
     }
 
     public function logout()
@@ -76,22 +76,20 @@ $this -> getList();return;//====================================================
 
     public function login($data)
     {
-        $this -> data = $this -> parseUserData($data);
-        if ((isset($this -> data['user_name'])) && (isset($this -> data['user_password']))) {
-            $login = $this -> data['user_name'];
-            $password = $this -> data['user_password'];
+        $this -> parseUserData($data);
+        if ((isset($this -> data['user_name'])) && (isset($this -> data['password']))) {
             if (isset($this -> data['login'])) {
-                if ($this -> checkUser($login, $password)) {
-                    $questionController = new QuestionController();
-                    $questionController -> defaultAction();
+                if ($this -> checkUser($this -> data['user_name'], $this -> data['password'])) {
+                    $this -> runApp();
                 } else {
                     $this -> result = 'Пользователь не зарегистрирован';
                     $this -> defaultAction();
                 }
-            }
-            if (isset($this -> data['register'])) {
-                $this -> add($login, $password);
+            } elseif (isset($this -> data['register'])) {
+                $this -> add($this -> data);
                 $this -> result = 'Вы зарегистрированы';
+                $this -> defaultAction();
+            } else {
                 $this -> defaultAction();
             }
         } else {
@@ -119,7 +117,7 @@ $this -> getList();return;//====================================================
             $this -> errors['user_name'] = 'Error user name';
         }
         if (isset($data['user_password']) && preg_match('/[0-9A-z\s]+/', $data['user_password'])) {
-            $this -> data['user_password'] = $data['user_password'];
+            $this -> data['password'] = $data['user_password'];
         } else {
             $this -> errors['password'] = 'Error password';
         }
@@ -140,6 +138,7 @@ $this -> getList();return;//====================================================
         if (isset($userName)) {
             $userModel = new User();
             $user = $userModel -> getByName($userName);
+var_dump($user);
             if (!empty($user)) {
                 return $user;
             } else {
@@ -153,9 +152,14 @@ $this -> getList();return;//====================================================
         return !empty($_SESSION['user']);
     }
     
-    private function checkUser($login, $password)
+    private function isAdmin()
     {
-        $user = $this -> getUser($login);
+        return ($_SESSION['user']['is_admin'] != 0);
+    }
+
+    private function checkUser($userName, $password)
+    {
+        $user = $this -> getUser($userName);
         if (!$user) {
             return FALSE;
         } else {
@@ -163,9 +167,24 @@ $this -> getList();return;//====================================================
                 session_start();
                 $_SESSION['user'] = $user;
                 return TRUE;
+            } else {
+                return FALSE;
             }
         }
-        
+    }
+    
+    private function runApp()
+    {
+        if ($this -> isAuthorized()) {
+            if ($this -> isAdmin()) {
+                $questionController = new QuestionController(TRUE);
+            } else {
+                $questionController = new QuestionController(FALSE);
+            }
+            $questionController -> defaultAction();
+        } else {
+            $this -> result = 'Пользователь не авторизован';
+        }
     }
 
 }//end class Usercontroller
