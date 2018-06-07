@@ -26,7 +26,6 @@ body {
     width: 20%;
     height: 80%;
     text-transform: uppercase;
-    
 }
 
 .menu-item a {
@@ -35,13 +34,16 @@ body {
     color: white;
 }
 
+header h2 {
+    padding-top: 60px;
+}
+
 .main-container {
     display: block;
     min-width: 820px;
     max-width: 1600px;
-    top: 50px;
     margin: 0 auto; 
-    padding: 45px 10px 10px;
+    padding: 10px;
     background-color: #eeeeee;
     border: 2px solid #555555;
 }
@@ -128,7 +130,7 @@ td {
 }
 
 .column-action {
-    width: 200px;
+    width: auto;
 }
 
 .column-status {

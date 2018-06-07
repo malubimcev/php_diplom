@@ -1,11 +1,15 @@
 <?php
 
 require_once 'Controller.php';
+require_once 'controller/Application.php';
+require_once 'controller/ControllerTraits.php';
 require_once 'model/Question.php';
 require_once 'view/QuestionView.php';
 
 class QuestionController extends Controller
 {
+    use ParsingTrait;
+    
     private $questions = [];//список вопросов
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
@@ -15,46 +19,52 @@ class QuestionController extends Controller
     {
         $question = new Question();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
+                $this -> data['status'] = 0;
                 $question -> add($this -> data);
                 $this -> getList();
             }
         }
+        $question = NULL;
     }
     
     public function delete($params)
     {
         $question = new Question();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
                 $question -> delete($this -> data);
                 $this -> getList();
             }
         }
+        $question = NULL;
     }
 
-    public function update($id, $params)
+    public function update($params)
     {
         $question = new Question();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
+            $id = $this -> data['id'];
             if (count($this -> errors) == 0) {
-                $question -> update($this -> data);
+                $question -> update($id, $this -> data);
                 $this -> getList();
             }
         }
+        $question = NULL;
     }
 
     public function getList()
     {
         $question = new Question();
         $this -> questions = $question -> getList();
-        //if (!empty($this -> questions)) {
+        if (!empty($this -> questions)) {
+            $this -> setTemplate();
             $view = new QuestionView($this -> viewTemplate);
             $view -> render($this -> questions);
-        //}
+        }
         $question = NULL;
     }
     
@@ -63,52 +73,43 @@ class QuestionController extends Controller
         $this -> getList();
     }
         
-    public function sort($params)
+    public function hide($params)
+    {
+        if (count($params) > 0) {
+            $this -> parseData($params, $this -> data);
+            $this -> data['status'] = 2;
+            $this -> update($this -> data);
+        }
+    }
+
+    public function publicate($params)
+    {
+        if (count($params) > 0) {
+            $this -> parseData($params, $this -> data);
+            $this -> data['status'] = 1;
+            $this -> update($this -> data);
+        }
+    }
+
+    public function getByCategory($params)
     {
         $question = new Question();
-        if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
-            if (count($this -> errors) == 0) {
-                $question -> update($this -> data);
-                $this -> getList();
-            }
+        $this -> questions = $question -> getList();
+        if (!empty($this -> questions)) {
+            $this -> setTemplate();
+            $view = new QuestionView($this -> viewTemplate);
+            $view -> render($this -> questions);
         }
+        $question = NULL;
     }
 
-    private function parseData($data)
+    private function setTemplate()
     {
-        if (isset($data['id']) && preg_match('/[0-9\s]+/', $data['id'])) {
-            $this -> data['id'] = $data['id'];
-        } else {
-            $this -> errors['id'] = 'Error id';
-        }
-        if (isset($data['user_name']) && preg_match('/[0-9A-z\s]+/', $data['user_name'])) {
-            $this -> data['login'] = $data['user_name'];
-        } else {
-            $this -> errors['login'] = 'Error login';
-        }
-        //выборка и сортировка
-        if (isset($data['sort'])) {
-            switch ($data['sort_by']) {//выбираем поле сортировки
-                case 'user_id':
-                    $this -> data['sort_by'] = 'user_id';
-                    break;
-                case 'description':
-                    $this -> data['sort_by']  = 'description';
-                    break;
-                default:
-                    $this -> data['sort_by'] = 'date_added';
-                    break;
-            }
-        }        
-    }
-
-    public function __construct($adminMode = FALSE)
-    {
-        if ($adminMode) {
+        $app = Application::get();
+        if ($app -> isAdminMode()) {
             $this -> viewTemplate = 'questionsAdmin.twig';
         } else {
-            $this -> viewTemplate = 'questions.twig';
+            $this -> viewTemplate = 'questionsAdmin.twig';
         }
     }
 

@@ -12,11 +12,11 @@ class User extends Model
 
     public function add($data) 
     {
-        if (!$this -> isExistRecord($data['id'], $this -> table_name)) {
+        if (!($this -> isExistRecord($data['id'], $this -> table_name))) {
             $request = 'INSERT INTO users (
                             login,
                             password,
-                            email.
+                            email,
                             is_admin)
                         VALUES (
                             :login,
@@ -54,6 +54,7 @@ class User extends Model
                         WHERE
                             id=:id';
             $params = [
+                ':id' => $data['id'],
                 ':login' => $data['login'],
                 ':password' => $data['password'],
                 ':email' => $data['email'],
@@ -103,12 +104,10 @@ class User extends Model
                    password,
                    email,
                    is_admin';
-        $this -> recordset = $this ->getRecordByFieldValue($this -> table_name, $fields,'login',$name);
-echo '<br>recordset: ';var_dump($this->recordset);echo '===<br>';
+        $this -> recordset = $this -> getRecordByFieldValue($this -> table_name, $fields,'login',$name);
         if (empty($this -> recordset)) {
             return NULL;
         } else {
-echo '<br>recordset: ';var_dump($this->recordset);echo '===<br>';
             return $this -> recordset[0];
         }
     }

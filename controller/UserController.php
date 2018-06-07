@@ -1,11 +1,14 @@
 <?php
 require_once 'Controller.php';
 require_once 'model/User.php';
-require_once 'controller/QuestionController.php';
+require_once 'controller/Application.php';
+require_once 'controller/ControllerTraits.php';
 require_once 'view/UserView.php';
 
 class UserController extends Controller {
-
+    
+    use ParsingTrait;
+    
     private $data = [];
     private $errors = [];
     private $result ='';
@@ -17,7 +20,7 @@ class UserController extends Controller {
     {
         $user = new User();
         if (count($params) > 0) {
-            $this -> data = $this -> parseUserData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
                 if ($user -> add($this -> data)) {
                     $this -> getList();
@@ -27,24 +30,27 @@ class UserController extends Controller {
         }
     }
 
-    public function delete($id)
+    public function delete($params)
     {
-        if (isset($id) && is_numeric($id)) {
-            $user = new User();
-            $isDelete = $user -> delete($id);
-            if ($isDelete) {
-                $this -> getList();
-                $user = NULL;
-            }
+        $this -> parseData($params, $this -> data);
+        $user = new User();
+        $isDelete = $user -> delete($this -> data['id']);
+        if ($isDelete) {
+            $this -> getList();
+            $user = NULL;
+        } else {
+            $errors[] = 'User delete error';
         }
     }
 
-    public function update($id, $params)
+    public function update($params)
     {
-        $this -> data = $this -> parseUserData($params);
+        $this -> parseData($params, $this -> data);
         if (empty($this -> errors)) {
             $user = new User();
-            $user -> update($this -> data);
+            $user -> update($this -> data['id'], $this -> data);
+            $this -> getList();
+            $user = NULL;
         }
     }
 
@@ -60,7 +66,6 @@ class UserController extends Controller {
     
     public function defaultAction()
     {
-//$this -> getList();return;//========================================================================
         $view = new UserView($this -> loginPage);
         $this -> data['result'] = $this -> result;
         $view -> render($this -> data);
@@ -76,7 +81,7 @@ class UserController extends Controller {
 
     public function login($data)
     {
-        $this -> parseUserData($data);
+        $this -> parseData($data, $this -> data);
         if ((isset($this -> data['user_name'])) && (isset($this -> data['password']))) {
             if (isset($this -> data['login'])) {
                 if ($this -> checkUser($this -> data['user_name'], $this -> data['password'])) {
@@ -109,52 +114,17 @@ class UserController extends Controller {
         //$pass = password_hash("admin", PASSWORD_DEFAULT);
     }
     
-    private function parseUserData($data)
-    {
-        if (isset($data['user_name']) && preg_match('/[0-9A-z\s]+/', $data['user_name'])) {
-            $this -> data['user_name'] = $data['user_name'];
-        } else {
-            $this -> errors['user_name'] = 'Error user name';
-        }
-        if (isset($data['user_password']) && preg_match('/[0-9A-z\s]+/', $data['user_password'])) {
-            $this -> data['password'] = $data['user_password'];
-        } else {
-            $this -> errors['password'] = 'Error password';
-        }
-        if (isset($data['login'])) {
-            $this -> data['login'] = $data['login'];
-        } else {
-            $this -> errors['login'] = 'Error login';
-        }
-        if (isset($data['register'])) {
-            $this -> data['register'] = $data['register'];
-        } else {
-            $this -> errors['register'] = 'Error register';
-        }
-    }
-
     private function getUser($userName)
     { //функция получения пользователя по имени
         if (isset($userName)) {
             $userModel = new User();
             $user = $userModel -> getByName($userName);
-var_dump($user);
             if (!empty($user)) {
                 return $user;
             } else {
                 return NULL;
             }
         }
-    }
-
-    private function isAuthorized()
-    {
-        return !empty($_SESSION['user']);
-    }
-    
-    private function isAdmin()
-    {
-        return ($_SESSION['user']['is_admin'] != 0);
     }
 
     private function checkUser($userName, $password)
@@ -175,16 +145,18 @@ var_dump($user);
     
     private function runApp()
     {
-        if ($this -> isAuthorized()) {
-            if ($this -> isAdmin()) {
-                $questionController = new QuestionController(TRUE);
-            } else {
-                $questionController = new QuestionController(FALSE);
-            }
-            $questionController -> defaultAction();
+        $app = Application::get();
+        $app -> run();
+    }
+    
+    private function setTemplate()
+    {
+        $app = Application::get();
+        if ($app -> isAdminMode()) {
+            $this -> viewTemplate = 'userList.twig';
         } else {
-            $this -> result = 'Пользователь не авторизован';
+            $this -> viewTemplate = 'login.twig';
         }
     }
-
+    
 }//end class Usercontroller

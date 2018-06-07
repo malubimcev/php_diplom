@@ -32,7 +32,10 @@
             $action = $route[1];
             $params = $this -> getParams();
             if (!empty($route[2])) {
-                $params['request'] = $route[2];    
+                $params['paramName'] = $route[2];
+            }
+            if (!empty($route[3])) {
+                $params['paramValue'] = $route[3];
             }
             if (is_file($controllerFile)) {
                 require_once $controllerFile;

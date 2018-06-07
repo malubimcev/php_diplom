@@ -47,4 +47,4 @@ class Database
         return $results;
     }
         
-}//===end class===
+}//end class Database

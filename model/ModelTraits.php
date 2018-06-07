@@ -85,7 +85,6 @@
             $request .= $target_field .'=:'.$value;
             $request_params = [':'.$value => $value];
             $record = $this -> doRequest($request, $request_params);
-echo '<br>record: ';var_dump($record);echo '===<br>';
             if (!empty($record)) {
                 return $record;
             } else {

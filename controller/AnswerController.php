@@ -1,11 +1,14 @@
 <?php
 
 require_once 'Controller.php';
+require_once 'controller/ControllerTraits.php';
 require_once 'model/Answer.php';
 require_once 'view/AnswerView.php';
 
 class AnswerController extends Controller
 {
+    use ParsingTrait;
+    
     private $answers = [];//список вопросов
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
@@ -15,36 +18,39 @@ class AnswerController extends Controller
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> add($this -> data);
                 $this -> getList;
             }
         }
+        $answer = NULL;
     }
     
     public function delete($params)
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> delete($this -> data);
                 $this -> getList;
             }
         }
+        $answer = NULL;
     }
 
-    public function update($id, $params)
+    public function update($params)
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> data = $this -> parseData($params);
+            $this -> parseData($params);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> update($this -> data);
                 $this -> getList;
             }
         }
+        $answer = NULL;
     }
 
     public function getList()
@@ -70,15 +76,15 @@ class AnswerController extends Controller
         } else {
             $this -> errors['id'] = 'Error id';
         }
-        if (isset($data['user_id']) && preg_match('/[0-9\s]+/', $data['user_id'])) {
-            $this -> data['user_id'] = $data['user_id'];
-        } else {
-            $this -> errors['user_id'] = 'Error user';
-        }
         if (isset($data['question_id']) && preg_match('/[0-9\s]+/', $data['question_id'])) {
             $this -> data['question_id'] = $data['question_id'];
         } else {
             $this -> errors['question_id'] = 'Error question';
+        }
+        if (isset($data['paramName']) && ($data['paramName'] == 'id')) {
+            $this -> data['id'] = $data['paramValue'];
+        } else {
+            $this -> errors['id'] = 'Error id';
         }
         
     }

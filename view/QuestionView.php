@@ -3,7 +3,7 @@ require_once 'view/View.php';
 
 class QuestionView extends View
 {
-    private $template = 'adminPage.html';
+    private $template = 'adminPage.twig';
     
     public function __construct($template = '')
     {
