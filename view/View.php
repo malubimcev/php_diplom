@@ -1,5 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once 'autoload.php';
 
 class View
 {
@@ -19,4 +20,5 @@ class View
     {
         echo $this -> twig -> render($template, $data);
     }
+    
 }//end class View

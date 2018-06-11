@@ -1,11 +1,19 @@
 <div class="question-list">
-    <h3>Список вопросов</h3>
+    <h3>Задайте вопрос</h3>
+    {% for question in questions %}
+        {% set cat_id = question.category_id %}
+    {% endfor %}
+    <h4>{{ cat_id }}</h4>
     <div class="form-container">
         <form action="?/question/add" method="POST">
-            <input type="text" name="description" placeholder="Текст вопроса" value="">
+            <textarea name="description" placeholder="Текст вопроса" cols="30" rows="2"></textarea><br>
+            <input type="text" name="user_name" placeholder="Ваше имя"><br>
+            <input type="email" name="email" placeholder="Ваш E-mail"><br>
+            <input type="text" name="category_id" value="{{ cat_id }}">
             <input type="submit" name="save" value="Добавить">
         </form>
     </div>
+    <h3>Список вопросов</h3>
     <table class="table">
         <thead class="table-head">
             <tr class="header-row">
@@ -14,14 +22,20 @@
             </tr>
         </thead>
         <tbody>
-            {% for question in questions %}
-            <tr class="table-row">
-                <td class="column-description">{{ question.description|e }}</td>
-                <td class="column-date">{{ question.date_added }}</td>
-            </tr>
-            {% endfor %}
+            {% if questions %}
+                {% for question in questions %}
+                <tr class="table-row">
+                    <td class="column-description">{{ question.description|e }}</td>
+                    <td class="column-date">{{ question.date_added }}</td>
+                </tr>
+                <br>{% include 'answers.html' %}
+                {% endfor %}
+            {% else %}
+                <tr class="table-row">
+                    <td class="column-description"> - </td>
+                    <td class="column-date"> - </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>
-
-

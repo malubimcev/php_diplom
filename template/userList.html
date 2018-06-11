@@ -1,10 +1,10 @@
 <div class="user-list">
+    <h3>Список администраторов</h3>
     <form method="POST" action="?/user/add" class="user-input-form">
         <input type="text" name="user_name" placeholder="Имя пользователя" value=""> 
         <input type="password" name="user_password" placeholder="Пароль" value="">
         <input type="email" name="email" placeholder="E-mail" value="">
-        <label for="is_admin">Администратор</label>
-        <input type="checkbox" name="is_admin">
+        <input type="hidden" name="is_admin" value="1">
         <input type="submit" name="update" value="Добавить" class="button select-button">
     </form>
     <table class="table">
@@ -13,7 +13,6 @@
                 <td class="column-login">Имя</td>
                 <td class="column-password">Пароль</td>
                 <td class="column-email">E-mail</td>
-                <td class="column-is_admin">Администратор</td>
                 <td class="column-action" colspan="2">Действия</td>
             </tr>
         </thead>
@@ -21,16 +20,12 @@
             {% for user in users %}
             <tr class="table-row">
                 <form action="?/user/update" method="post">
-                    <td class="column-login"><input type="text" name="login" value="{{ user.login|e }}"></td>
+                    <td class="column-login"><input type="text" name="login" value="{{ user.login|e }}" readonly></td>
                     <td class="column-password"><input type="text" name="user_password" value="{{ user.password|e }}"></td>
                     <td class="column-email"><input type="text" name="email" value="{{ user.email|e }}"></td>
-                    <td class="column-is_admin"><input type="checkbox" name="is_admin" value="{{ user.is_admin }}"></td>
+                    <input type="hidden" name="is_admin" value="1">
                     <td class="column-action">
                         <button name="id" formaction="?/user/update" formmethod="post" value="{{ user.id }}">Сохранить</button>
-                    </td>
-                </form>
-                <form action="?/user/update" method="post">
-                    <td class="column-action">
                         <button name="id" formaction="?/user/delete" formmethod="post" value="{{ user.id }}">Удалить</button>
                     </td>
                 </form>

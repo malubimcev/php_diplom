@@ -1,5 +1,5 @@
 <?php
-require_once 'view/View.php';
+require_once 'autoload.php';
 
 class AnswerView extends View
 {
@@ -13,9 +13,9 @@ class AnswerView extends View
         parent::__construct();
     }
     
-    public function render($data)
+    public function render($answers, $question)
     {
-        parent::render($this -> template, array('answers' => $data));
+        parent::render($this -> template, array('answers' => $answers, 'question' => $question));
     }
 
 }//end class AnswerView

@@ -1,17 +1,14 @@
 <?php
-
-require_once 'Model.php';
+require_once 'autoload.php';
 
 class User extends Model
 {
     private $recordset = NULL;
     private $table_name = 'users';
-    private $users = [
-        ['login' => 'admin', 'password' => 'admin']
-    ];
 
     public function add($data) 
     {
+        $this -> validate($data);
         if (!($this -> isExistRecord($data['id'], $this -> table_name))) {
             $request = 'INSERT INTO users (
                             login,
@@ -29,8 +26,13 @@ class User extends Model
                 ':email' => $data['email'],
                 ':is_admin' => $data['is_admin']
             ];
-            $this -> doRequest($request, $request_params);
-            return TRUE;
+            try {
+                $this -> doRequest($request, $request_params);
+                return TRUE;
+            } catch (Exception $ex) {
+                echo 'Ошибка добавления пользователя: '.$ex -> getMessage()."\n";
+                return FALSE;
+            }
         } else {
             return FALSE;
         }
@@ -43,6 +45,7 @@ class User extends Model
     
     public function update($id, $data) 
     {
+        $this -> data = $this ->validate($data);
         if ($this -> isExistRecord($id, $this -> table_name)) {
             $request = 'UPDATE
                             users
@@ -124,6 +127,13 @@ class User extends Model
             return NULL;
         } else {
             return $this -> recordset[0];
+        }
+    }
+    
+    private function validate($data)
+    {
+        if (!isset($data['email'])) {
+            $data['email'] = ' ';
         }
     }
     

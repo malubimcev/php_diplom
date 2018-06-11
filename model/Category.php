@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Model.php';
+require_once 'autoload.php';
 
 class Category extends Model
 {
@@ -9,30 +9,17 @@ class Category extends Model
     private $category = NULL;
     private $table_name = 'categories';
     
-private $testCategories = [
-    ['id' => 1,
-     'name' => 'cat1'],
-    ['id' => 2,
-     'name' => 'cat2'],
-    ['id' => 3,
-     'name' => 'cat3']        
-];
-    
     public function add($data) 
     {
-        if ($this -> isExistRecord($data['id'], $this -> table_name)) {
-            $request = 'INSERT INTO categories (
-                            name
-                        VALUES (
-                            :name';
-            $params = [
-                ':name' => $data['name'],
-            ];
-            $this -> doRequest($request, $params);
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        $request = 'INSERT INTO categories (
+                        name)
+                    VALUES (
+                        :name)';
+        $params = [
+            ':name' => $data['name'],
+        ];
+        $this -> doRequest($request, $params);
+        return TRUE;
     }
     
     public function delete($id) 
@@ -62,7 +49,6 @@ private $testCategories = [
     
     public function getList()
     {
-return $this->testCategories;//============================        
         $fields = 'id AS id,
                    name';
         $this -> recordset = $this -> getAllRecords($this -> table_name, $fields, 'name', 'ASC');

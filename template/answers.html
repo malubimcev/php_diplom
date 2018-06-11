@@ -1,0 +1,27 @@
+<div class="answer-list">
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Ответ</td>
+                <td class="column-date">Дата добавления</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% if answers %}
+                {% for answer in answers %}
+                <tr class="table-row">
+                    <td class="column-description">{{ answer.description|e }}</td>
+                    <td class="column-date">{{ answer.date_added }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+            <!--
+                <tr class="table-row">
+                    <td class="column-description"> - </td>
+                    <td class="column-date"> - </td>
+                </tr>
+            -->
+            {% endif %}
+        </tbody>
+    </table>
+</div>

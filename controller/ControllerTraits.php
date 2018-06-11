@@ -4,7 +4,6 @@ trait ParsingTrait
 {
     public function parseData(&$inputData, &$outputData)
     {
-echo '<br>=parsing input: ';var_dump($inputData); echo '=<br>';
         if (isset($inputData['paramName'])) {
             $outputData[$inputData['paramName']] = $inputData['paramValue'];
         }
@@ -20,8 +19,11 @@ echo '<br>=parsing input: ';var_dump($inputData); echo '=<br>';
         if (isset($inputData['category_id']) && preg_match('/[0-9\s]+/', $inputData['category_id'])) {
             $outputData['category_id'] = $inputData['category_id'];
         }
-        if (isset($inputData['description']) && preg_match('/[0-9A-z\s]+/', $inputData['description'])) {
+        if (isset($inputData['description'])) {
             $outputData['description'] = $inputData['description'];
+        }
+        if (isset($inputData['name']) && preg_match('/[0-9A-zА-я\s]+/', $inputData['name'])) {
+            $outputData['name'] = $inputData['name'];
         }
         if (isset($inputData['user_name']) && preg_match('/[0-9A-z\s]+/', $inputData['user_name'])) {
             $outputData['user_name'] = $inputData['user_name'];
@@ -39,16 +41,15 @@ echo '<br>=parsing input: ';var_dump($inputData); echo '=<br>';
             $outputData['email'] = $inputData['email'];
         }
         if (isset($inputData['is_admin'])) {
-            if ($inputData['is_admin'] == (TRUE || 'on' || 1)) {
+            if ($inputData['is_admin'] == (TRUE || 'on' || '1')) {
                 $outputData['is_admin'] = 1;
             } else {
                 $outputData['is_admin'] = 0;
             }
         }
-        if (isset($inputData['status'])) {
+        if (isset($inputData['status']) && preg_match('/[0-3\s]+/', $inputData['status'])) {
             $outputData['status'] = $inputData['status'];
         }
-echo '<br>=parsing output: ';var_dump($outputData); echo '=<br>';
     }
 
 }//end trait ParsingTrait

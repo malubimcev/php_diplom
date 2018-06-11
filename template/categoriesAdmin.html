@@ -1,0 +1,5 @@
+<ul class="category-list">
+    {% for cat in categories %}
+        <li class="category-item"><a href="?/question/getAllByCategory/id/{{ cat.id }}">{{ cat.name }}</a></li>
+    {% endfor %}
+</ul>

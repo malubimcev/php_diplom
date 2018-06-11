@@ -1,5 +1,5 @@
 <?php
-require_once 'view/View.php';
+require_once 'autoload.php';
 
 class UserView extends View
 {

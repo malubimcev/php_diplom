@@ -1,0 +1,59 @@
+<div class="answer-list">
+    <h3>Вопрос</h3>
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Вопрос</td>
+                <td class="column-status">Статус</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-row">
+                <td class="column-description">{{ question.description|e }}</td>
+                <td class="column-status">
+                    {% if question.status == 1 %}
+                        <span class="">опубликован</span>
+                    {% elseif  question.status == 2 %}
+                        <span class="">скрыт</span>
+                    {% else %}
+                        <span class="">ожидает ответа</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="answer-list">
+    <h3>Добавить ответ</h3>
+    <div class="form-container">
+        <form action="?/answer/add" method="POST">
+            <textarea name="description" placeholder="Текст ответа" cols="30" rows="2"></textarea><br>
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+            <input type="submit" name="add" value="Добавить">
+        </form>
+    </div>
+    <h3>Ответы</h3>
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Ответ</td>
+                <td class="column-date">Дата добавления</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% if answers %}
+                {% for answer in answers %}
+                <tr class="table-row">
+                    <td class="column-description">{{ answer.description|e }}</td>
+                    <td class="column-date">{{ answer.date_added }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="table-row">
+                    <td class="column-description"> - </td>
+                    <td class="column-date"> - </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

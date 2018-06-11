@@ -1,49 +1,26 @@
 <?php
 
-require_once 'Model.php';
+require_once 'autoload.php';
 
 class Answer extends Model
 {
     private $recordset = NULL;
     private $table_name = 'answers';
 
-private $testAnswers = [
-    [
-        'id' => 1,
-        'description' => 'answer1',
-        'question_id' => '1'
-    ],
-    [
-        'id' => 2,
-        'description' => 'answer2',
-        'question_id' => '1'
-    ],
-    [
-        'id' => 3,
-        'description' => 'answer3',
-        'question_id' => '2'
-    ]
-];
-    
-    
     public function add($data) 
     {
-        if (!$this -> isExistRecord($data['id'], $this -> table_name)) {
-            $request = 'INSERT INTO answers (
-                            question_id,
-                            description)
-                        VALUES (
-                            :question_id,
-                            :description)';
-            $request_params = [
-                ':question_id' => $data['question_id'],
-                ':description' => $data['description']
-            ];
-            $this -> doRequest($request, $request_params);
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        $request = 'INSERT INTO answers (
+                        question_id,
+                        description)
+                    VALUES (
+                        :question_id,
+                        :description)';
+        $request_params = [
+            ':question_id' => $data['question_id'],
+            ':description' => $data['description']
+        ];
+        $this -> doRequest($request, $request_params);
+        return TRUE;
     }
     
     public function delete($id) 
@@ -64,7 +41,7 @@ private $testAnswers = [
             $params = [
                 ':question_id' => $data['question_id'],
                 ':description' => $data['description'],
-                ':status' => $data['status']
+                ':id' => $id
             ];
             $this -> doRequest($request, $params);
             return TRUE;
@@ -75,8 +52,7 @@ private $testAnswers = [
     
     public function getList()
     {
-return $this->testAnswers;//=============================================================
-        $fields = 'id AS id,
+        $fields = ' id AS id,
                     question_id,
                     description,
                     date_added';
@@ -90,7 +66,7 @@ return $this->testAnswers;//====================================================
     
     public function getById($id)
     {
-        $fields = 'id AS id,
+        $fields = ' id AS id,
                     question_id,
                     description,
                     date_added';
@@ -115,7 +91,7 @@ return $this->testAnswers;//====================================================
                     ON
                         questions.id = answers.question_id
                     WHERE
-                        question_id = :question_id
+                        answers.question_id = :question_id
                     ORDER BY date_added DESC';
         $params = [
             ':question_id' => $question_id

@@ -1,8 +1,8 @@
 <div class="category-list">
-    <h3>Категории</h3>
+    <h3>Темы</h3>
     <div class="form-container">
         <form action="?/category/add" method="POST">
-            <input type="text" name="description" placeholder="Название" value="">
+            <input type="text" name="name" placeholder="Название" value="">
             <input type="submit" name="save" value="Добавить">
         </form>
     </div>
@@ -24,9 +24,11 @@
                 <td class="column-status">{{ category.questions_count|e }}</td>
                 <td class="column-status">{{ category.publicated|e }}</td>
                 <td class="column-status">{{ category.unanswered|e }}</td>
-                <td class="column-action">
-                    <a href="?/category/delete/id/{{ category.id }}">Удалить</a>
-                </td>
+                <form action="?/category/delete" method="post">
+                    <td class="column-action">
+                        <button name="id" formaction="?/category/delete" formmethod="post" value="{{ category.id }}">Удалить</button>
+                    </td>
+                </form>
             </tr>
             {% endfor %}
         </tbody>

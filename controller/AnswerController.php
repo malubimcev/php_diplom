@@ -1,9 +1,7 @@
 <?php
 
-require_once 'Controller.php';
+require_once 'autoload.php';
 require_once 'controller/ControllerTraits.php';
-require_once 'model/Answer.php';
-require_once 'view/AnswerView.php';
 
 class AnswerController extends Controller
 {
@@ -13,12 +11,13 @@ class AnswerController extends Controller
     private $data = [];//параметры для запроса в модель
     private $errors = [];//массив для записи ошибок
     private $viewTemplate = 'answer.twig';
+    private $newAnswerTemplate = 'answersAdmin.twig';
     
     public function add($params)
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> add($this -> data);
                 $this -> getList;
@@ -31,7 +30,7 @@ class AnswerController extends Controller
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> delete($this -> data);
                 $this -> getList;
@@ -44,7 +43,7 @@ class AnswerController extends Controller
     {
         $answer = new Answer();
         if (count($params) > 0) {
-            $this -> parseData($params);
+            $this -> parseData($params, $this -> data);
             if (count($this -> errors) == 0) {
                 $idAdd = $answer -> update($this -> data);
                 $this -> getList;
@@ -68,25 +67,17 @@ class AnswerController extends Controller
     {
         $this -> getList();
     }
-        
-    private function parseData($data)
+    
+    public function addAnswer($params)
     {
-        if (isset($data['id']) && preg_match('/[0-9\s]+/', $data['id'])) {
-            $this -> data['id'] = $data['id'];
-        } else {
-            $this -> errors['id'] = 'Error id';
-        }
-        if (isset($data['question_id']) && preg_match('/[0-9\s]+/', $data['question_id'])) {
-            $this -> data['question_id'] = $data['question_id'];
-        } else {
-            $this -> errors['question_id'] = 'Error question';
-        }
-        if (isset($data['paramName']) && ($data['paramName'] == 'id')) {
-            $this -> data['id'] = $data['paramValue'];
-        } else {
-            $this -> errors['id'] = 'Error id';
-        }
-        
+        $this -> parseData($params, $this -> data);
+        $question = new Question();
+        $questions = $question -> getById($this -> data['question_id']);
+        $answer = new Answer();
+        $answers = $answer -> getByQuestion($this -> data['question_id']);
+//$answers = ['description' => 'jhbjgg', 'date_added' => '000'];//==================================================================
+        $view = new AnswerView($this -> newAnswerTemplate);
+        $view -> render($answers, $questions);
     }
-
+        
 }//end class AnswerController

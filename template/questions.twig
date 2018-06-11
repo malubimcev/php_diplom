@@ -1,4 +1,9 @@
 {% extends "userPage.twig" %}
 {% block content %}
-    {% include 'questions.html' %}
+    <div class="left-container">
+        {% include 'categories.html' %}
+    </div>  
+    <div class="right-container">
+        {% include 'questions.html' %}
+    </div>
 {% endblock %}

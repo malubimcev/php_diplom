@@ -1,9 +1,6 @@
 <?php
-require_once 'Controller.php';
-require_once 'model/User.php';
-require_once 'controller/Application.php';
+require_once 'autoload.php';
 require_once 'controller/ControllerTraits.php';
-require_once 'view/UserView.php';
 
 class UserController extends Controller {
     
@@ -14,6 +11,7 @@ class UserController extends Controller {
     private $result ='';
     private $authorizedUser = NULL;
     private $loginPage = 'login.twig';
+    private $mainPage = 'questions.twig';
     private $userListPage = 'userList.twig';
 
     public function add($params)
@@ -25,6 +23,9 @@ class UserController extends Controller {
                 if ($user -> add($this -> data)) {
                     $this -> getList();
                     $user = NULL;
+                    return TRUE;
+                } else {
+                    return FALSE;
                 }
             }
         }
@@ -46,37 +47,56 @@ class UserController extends Controller {
     public function update($params)
     {
         $this -> parseData($params, $this -> data);
-        if (empty($this -> errors)) {
-            $user = new User();
-            $user -> update($this -> data['id'], $this -> data);
-            $this -> getList();
-            $user = NULL;
-        }
+        $user = new User();
+        $user -> update($this -> data['id'], $this -> data);
+        $this -> getList();
+        $user = NULL;
     }
 
     public function getList()
     {
-        $user = new User();
-        $this -> data = $user -> getList();
-        if (!empty($this -> data)) {
-            $view = new UserView($this -> userListPage);
-            $view -> render($this -> data);
+        if ($this -> isAdminMode()) {
+            $user = new User();
+            $this -> data = $user -> getList();
+            if (!empty($this -> data)) {
+                $view = new UserView($this -> userListPage);
+                $view -> render($this -> data);
+            }
+        } else {
+            $this -> defaultAction();
         }
     }
-    
-    public function defaultAction()
+
+    public function getByName($name)
+    {
+        $user = new User();
+        $this -> data = $user -> getByName($name);
+        return $this -> data;
+    }
+   
+    public function loginPage()
     {
         $view = new UserView($this -> loginPage);
         $this -> data['result'] = $this -> result;
         $view -> render($this -> data);
     }
 
+    public function main()
+    {
+        $this -> runApp();
+    }
+
+    public function defaultAction()
+    {
+        $this -> main();
+    }
+
     public function logout()
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
+        session_start();
+        session_destroy();
         $this -> defaultAction();
+        exit;
     }
 
     public function login($data)
@@ -88,33 +108,45 @@ class UserController extends Controller {
                     $this -> runApp();
                 } else {
                     $this -> result = 'Пользователь не зарегистрирован';
-                    $this -> defaultAction();
+                    $this -> loginPage();
                 }
             } elseif (isset($this -> data['register'])) {
                 $this -> add($this -> data);
                 $this -> result = 'Вы зарегистрированы';
-                $this -> defaultAction();
+                $this -> loginPage();
             } else {
-                $this -> defaultAction();
+                $this -> loginPage();
             }
         } else {
             $this -> result = 'Введите имя и пароль';
-            $this -> defaultAction();
+            $this -> loginPage();
         }
     }
     
-    public function getResult()
+    public function getUser($userName)
+    {//функция ищет пользователя по имени или создает нового
+        $user = $this -> getUserByName($userName);
+        if (!isset($user)) {
+            $userModel = new User();
+            $userData = [];
+            $userData['user_name'] = $userName;
+            $userData['password'] = '';
+            $userData['is_admin'] = 0;
+            if ($userModel -> add($userData)) {
+                $user = $userModel -> getByName($userName);
+            } else {
+                $user = NULL;
+            }
+        }
+        return $user;
+    }
+    
+    private function getResult()
     {
         return $this -> result;
     }
     
-    public function get_authorized_user()
-    {
-        return $_SESSION['user']['login'];
-        //$pass = password_hash("admin", PASSWORD_DEFAULT);
-    }
-    
-    private function getUser($userName)
+    private function getUserByName($userName)
     { //функция получения пользователя по имени
         if (isset($userName)) {
             $userModel = new User();
@@ -129,7 +161,7 @@ class UserController extends Controller {
 
     private function checkUser($userName, $password)
     {
-        $user = $this -> getUser($userName);
+        $user = $this -> getUserByName($userName);
         if (!$user) {
             return FALSE;
         } else {
@@ -145,18 +177,15 @@ class UserController extends Controller {
     
     private function runApp()
     {
-        $app = Application::get();
-        $app -> run();
+        $questionController = new QuestionController();
+        $questionController -> defaultAction();
+        $questionController = NULL;
     }
     
-    private function setTemplate()
+    private function isAdminMode()
     {
         $app = Application::get();
-        if ($app -> isAdminMode()) {
-            $this -> viewTemplate = 'userList.twig';
-        } else {
-            $this -> viewTemplate = 'login.twig';
-        }
+        return $app -> isAdminMode();
     }
     
 }//end class Usercontroller
