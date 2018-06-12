@@ -1,4 +1,27 @@
 <div class="answer-list">
+    <h3>Вопрос</h3>
+    <table class="table">
+        <thead class="table-head">
+            <tr class="header-row">
+                <td class="column-description">Вопрос</td>
+            </tr>
+        </thead>
+        {% if question %}
+        <tbody>
+            <tr class="table-row">
+                <td class="column-description">{{ question.description }}</td>
+            </tr>
+        </tbody>
+        {% else %}
+        <tbody>
+            <tr class="table-row">
+                <td class="column-description">-</td>
+            </tr>
+        </tbody>
+        {% endif %}
+    </table>
+</div>
+<div class="answer-list">
     <table class="table">
         <thead class="table-head">
             <tr class="header-row">
@@ -7,21 +30,20 @@
             </tr>
         </thead>
         <tbody>
-            {% if answers %}
-                {% for answer in answers %}
+        {% if answers %}
+            {% for answer in answers %}
                 <tr class="table-row">
                     <td class="column-description">{{ answer.description|e }}</td>
                     <td class="column-date">{{ answer.date_added }}</td>
                 </tr>
-                {% endfor %}
-            {% else %}
-            <!--
-                <tr class="table-row">
-                    <td class="column-description"> - </td>
-                    <td class="column-date"> - </td>
-                </tr>
-            -->
-            {% endif %}
+            {% endfor %}
+        {% else %}
+            <tr class="table-row">
+                <td class="column-description"> - </td>
+                <td class="column-date"> - </td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
+
 </div>

@@ -1,15 +1,20 @@
 <div class="question-list">
     <h3>Задайте вопрос</h3>
+    {% set catid=0 %}
     {% for question in questions %}
-        {% set cat_id = question.category_id %}
+        {% set catid=question.category_id %}
     {% endfor %}
-    <h4>{{ cat_id }}</h4>
+    {% for cat in categories %}
+        {% if cat.id == catid %}
+        <h3>{{ cat.name }}</h3>
+        {% endif %}
+    {% endfor %}
     <div class="form-container">
         <form action="?/question/add" method="POST">
             <textarea name="description" placeholder="Текст вопроса" cols="30" rows="2"></textarea><br>
             <input type="text" name="user_name" placeholder="Ваше имя"><br>
             <input type="email" name="email" placeholder="Ваш E-mail"><br>
-            <input type="text" name="category_id" value="{{ cat_id }}">
+            <input type="hidden" name="category_id" value="{{ catid }}">
             <input type="submit" name="save" value="Добавить">
         </form>
     </div>
@@ -25,10 +30,13 @@
             {% if questions %}
                 {% for question in questions %}
                 <tr class="table-row">
-                    <td class="column-description">{{ question.description|e }}</td>
+                    <td class="column-description">
+                        <a href="?/answer/getByQuestion/question_id/{{ question.id }}">
+                            {{ question.description|e }}
+                        </a>
+                    </td>
                     <td class="column-date">{{ question.date_added }}</td>
                 </tr>
-                <br>{% include 'answers.html' %}
                 {% endfor %}
             {% else %}
                 <tr class="table-row">

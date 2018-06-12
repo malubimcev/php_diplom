@@ -20,12 +20,15 @@
         <tbody>
             {% for category in categories %}
             <tr class="table-row">
-                <td class="column-description">{{ category.name|e }}</td>
+                <form action="?/category/update" method="post">
+                <td class="column-description">
+                    <input class="cell-input" type="text" name="name" value="{{ category.name|e }}">
+                </td>
                 <td class="column-status">{{ category.questions_count|e }}</td>
                 <td class="column-status">{{ category.publicated|e }}</td>
                 <td class="column-status">{{ category.unanswered|e }}</td>
-                <form action="?/category/delete" method="post">
                     <td class="column-action">
+                        <button name="id" formaction="?/category/update" formmethod="post" value="{{ category.id }}">Сохранить</button>
                         <button name="id" formaction="?/category/delete" formmethod="post" value="{{ category.id }}">Удалить</button>
                     </td>
                 </form>

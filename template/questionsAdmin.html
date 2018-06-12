@@ -1,5 +1,13 @@
 <div class="question-list">
-    <h3>Список вопросов</h3>
+    {% set catid=0 %}
+    {% for question in questions %}
+        {% set catid=question.category_id %}
+    {% endfor %}
+    {% for cat in categories %}
+        {% if cat.id == catid %}
+        <h3>Список вопросов по теме: {{ cat.name }}</h3>
+        {% endif %}
+    {% endfor %}
     <table class="table">
         <thead class="table-head">
             <tr class="header-row">
@@ -7,42 +15,53 @@
                 <td class="column-status">Тема</td>
                 <td class="column-date">Дата добавления</td>
                 <td class="column-status">Статус</td>
-                <td class="column-action">Действия</td>
                 <td class="column-author">Автор</td>
+                <td class="column-action" colspan="2">Действия</td>
+                
             </tr>
         </thead>
         <tbody>
             {% for question in questions %}
             <tr class="table-row">
-                <td class="column-description">{{ question.description|e }}</td>
-                <td class="column-status">
-                    <select class="field-new-type" name="category_id">
-                        {% for cat in categories %}
-                            {% if cat.id == question.category_id %}
-                                <option value="{{ cat.id }}" selected="">{{ cat.name }}</option>
-                            {% else %}
-                                <option value="{{ cat.id }}">{{ cat.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>                    
-                </td>
-                <td class="column-date">{{ question.date_added }}</td>
-                <td class="column-status">
-                    {% if question.status == 1 %}
-                        <span class="">опубликован</span>
-                    {% elseif  question.status == 2 %}
-                        <span class="">скрыт</span>
-                    {% else %}
-                        <span class="">ожидает ответа</span>
-                    {% endif %}
-                </td>
-                <td class="column-action">
-                    <a href="?/answer/addAnswer/question_id/{{ question.id }}">Ответить</a>
-                    <a href="?/question/publicate/id/{{ question.id }}">Опубликовать</a>
-                    <a href="?/question/hide/id/{{ question.id }}">Скрыть</a>
-                    <a href="?/question/delete/id/{{ question.id }}">Удалить</a>
-                </td>
-                <td class="column-author">{{ question.user_name|e }}</td>
+                <form action="?/question/update" method="post">
+                    <td class="column-description">
+                        <input class="cell-input" type="text" name="description" value="{{ question.description|e }}">
+                    </td>
+                    <td class="column-status">
+                        <select class="field-new-type" name="category_id">
+                            {% for cat in categories %}
+                                {% if cat.id == question.category_id %}
+                                    <option value="{{ cat.id }}" selected="">{{ cat.name|e }}</option>
+                                {% else %}
+                                    <option value="{{ cat.id }}">{{ cat.name|e }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>                    
+                    </td>
+                    <td class="column-date">{{ question.date_added }}</td>
+                    <td class="column-status">
+                        {% if question.status == 1 %}
+                            <span class="">опубликован</span>
+                        {% elseif  question.status == 2 %}
+                            <span class="">скрыт</span>
+                        {% else %}
+                            <span class="">ожидает ответа</span>
+                        {% endif %}
+                    </td>
+                    <td class="column-author">
+                        <input class="cell-input" type="text" name="user_name" value="{{ question.user_name|e }}">
+                        <input class="cell-input" type="hidden" name="user_id" value="{{ question.user_id }}">
+                    </td>
+                    <td class="column-action">
+                        <button name="id" formaction="?/question/update" formmethod="post" value="{{ question.id }}">Сохранить</button>
+                    </td>
+                    <td class="column-action">
+                        <a href="?/answer/addAnswer/question_id/{{ question.id }}">Ответить</a>
+                        <a href="?/question/publicate/id/{{ question.id }}">Опубликовать</a>
+                        <a href="?/question/hide/id/{{ question.id }}">Скрыть</a>
+                        <a href="?/question/delete/id/{{ question.id }}">Удалить</a>
+                    </td>
+                </form>
             </tr>
             {% endfor %}
         </tbody>

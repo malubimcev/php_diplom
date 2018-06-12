@@ -9,19 +9,23 @@ class AnswerController extends Controller
     
     private $answers = [];//список вопросов
     private $data = [];//параметры для запроса в модель
-    private $errors = [];//массив для записи ошибок
-    private $viewTemplate = 'answer.twig';
+    private $viewTemplate = 'answers.twig';
     private $newAnswerTemplate = 'answersAdmin.twig';
     
     public function add($params)
     {
-        $answer = new Answer();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            if (count($this -> errors) == 0) {
-                $idAdd = $answer -> add($this -> data);
-                $this -> getList;
+            $answer = new Answer();
+            $question = new Question();
+            if (!isset($this -> data['status'])) {
+                $this -> data['status'] = 2;
+            } else {
+                $this -> data['status'] = 1;
             }
+            $answer -> add($this -> data);
+            $question ->updateStatus($this -> data['question_id'], $this -> data['status']);
+            $this -> addAnswer($this -> data);
         }
         $answer = NULL;
     }
@@ -31,10 +35,8 @@ class AnswerController extends Controller
         $answer = new Answer();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            if (count($this -> errors) == 0) {
-                $idAdd = $answer -> delete($this -> data);
-                $this -> getList;
-            }
+            $idAdd = $answer -> delete($this -> data);
+            $this -> getList;
         }
         $answer = NULL;
     }
@@ -44,22 +46,27 @@ class AnswerController extends Controller
         $answer = new Answer();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            if (count($this -> errors) == 0) {
-                $idAdd = $answer -> update($this -> data);
-                $this -> getList;
-            }
+            $idAdd = $answer -> update($this -> data);
+            $this -> getList;
         }
         $answer = NULL;
     }
-
+    
     public function getList()
     {
-        $answer = new Answer();
-        $this -> answers = $answer -> getList();
-        if (!empty($this -> answers)) {
-            $view = new AnswerView($this -> viewTemplate);
-            $view -> render($this -> answers);
-        }
+        $this -> getByQuestion($this -> data);
+    }
+
+    public function getByQuestion($params)
+    {
+        $this -> parseData($params, $this -> data);
+        $questionModel = new Question();
+        $question = [];
+        $question = $questionModel -> getById($this -> data['question_id'])[0];
+        $answerModel = new Answer();
+        $this -> answers = $answerModel -> getByQuestion($question['id']);
+        $view = new AnswerView($this -> viewTemplate);
+        $view -> render($this -> answers, $question);
         $answer = NULL;
     }
     
@@ -71,13 +78,13 @@ class AnswerController extends Controller
     public function addAnswer($params)
     {
         $this -> parseData($params, $this -> data);
-        $question = new Question();
-        $questions = $question -> getById($this -> data['question_id']);
-        $answer = new Answer();
-        $answers = $answer -> getByQuestion($this -> data['question_id']);
-//$answers = ['description' => 'jhbjgg', 'date_added' => '000'];//==================================================================
+        $questionModel = new Question();
+        $question = [];
+        $question = $questionModel -> getById($this -> data['question_id'])[0];
+        $answerModel = new Answer();
+        $this -> answers = $answerModel -> getByQuestion($question['id']);
         $view = new AnswerView($this -> newAnswerTemplate);
-        $view -> render($answers, $questions);
+        $view -> render($this -> answers, $question);
     }
         
 }//end class AnswerController

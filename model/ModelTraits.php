@@ -94,7 +94,8 @@
         
         public function getRecord($id, $table, $fields)
         {
-            return $record = $this -> getRecordByFieldValue($table, $fields, 'id', $id);
+            $record = $this -> getRecordByFieldValue($table, $fields, 'id', $id);
+            return $record;
         }
         
     }//end trait RecordsTrait

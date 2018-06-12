@@ -83,13 +83,9 @@ class Answer extends Model
         $request = 'SELECT
                         answers.id AS id,
                         answers.description AS description,
-                        answers.date_added AS date_added,
+                        answers.date_added AS date_added
                     FROM
                         answers 
-                    INNER JOIN
-                        questions
-                    ON
-                        questions.id = answers.question_id
                     WHERE
                         answers.question_id = :question_id
                     ORDER BY date_added DESC';

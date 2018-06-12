@@ -27,12 +27,12 @@ class CategoryController extends Controller
     public function delete($params)
     {
         $category = new Category();
+        $question = new Question();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            if (count($this -> errors) == 0) {
-                $category -> delete($this -> data['id']);
-                $this -> getList();
-            }
+            $question -> deleteByCategory($this -> data['id']);
+            $category -> delete($this -> data['id']);
+            $this -> getList();
         }
         $category = NULL;
     }
@@ -42,10 +42,9 @@ class CategoryController extends Controller
         $category = new Category();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            if (count($this -> errors) == 0) {
-                $category -> update($this -> data['id'], $this -> data);
-                $this -> getList();
-            }
+//echo 'Cat.update.params='; var_dump($this->data);echo '++<br>';exit;            
+            $category -> update($this -> data['id'], $this -> data);
+            $this -> getList();
         }
         $category = NULL;
     }
@@ -68,7 +67,6 @@ class CategoryController extends Controller
     private function setTemplate()
     {
         $app = Application::get();
-echo 'app=== '.(string)($app->isAdminMode()).' ===<br>';
         if ($app -> isAdminMode()) {
             $this -> viewTemplate = 'categoryList.twig';
         } else {

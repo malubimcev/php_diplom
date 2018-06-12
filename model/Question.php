@@ -112,7 +112,8 @@ class Question extends Model
                         questions.date_added AS date_added,
                         questions.status AS status,
                         questions.category_id,
-                        users.login AS user_name
+                        questions.user_id,
+                        users.login AS user_name,
                     FROM
                         questions 
                     INNER JOIN
@@ -122,7 +123,7 @@ class Question extends Model
                     WHERE
                         category_id=:category_id
                     AND
-                        questions.status<>0
+                        questions.status=1
                     ORDER BY questions.date_added DESC';
         $params = [
             ':category_id' => $category_id
@@ -135,7 +136,7 @@ class Question extends Model
         return $this -> recordset;
     }
     
-        public function getAllByCategory($category_id)
+    public function getAllByCategory($category_id)
     {
         $request = 'SELECT
                         questions.id AS id,
@@ -143,6 +144,7 @@ class Question extends Model
                         questions.date_added AS date_added,
                         questions.status AS status,
                         questions.category_id,
+                        questions.user_id,
                         users.login AS user_name
                     FROM
                         questions 
@@ -163,6 +165,18 @@ class Question extends Model
         }
         return $this -> recordset;
     }
-
+    
+    public function deleteByCategory($category_id)
+    {
+        $request = 'DELETE FROM
+                        questions 
+                    WHERE
+                        category_id=:category_id';
+        $params = [
+            ':category_id' => $category_id
+        ];
+        $this -> doRequest($request, $params);
+        return;
+    }
 
 }//end class UserModel

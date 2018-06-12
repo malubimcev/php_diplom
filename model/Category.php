@@ -36,7 +36,7 @@ class Category extends Model
                             name=:name
                         WHERE
                             id=:id';
-            $request_params = [
+            $params = [
                 ':name' => $data['name'],
                 ':id' => $data['id']
             ];

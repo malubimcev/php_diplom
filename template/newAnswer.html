@@ -7,20 +7,33 @@
                 <td class="column-status">Статус</td>
             </tr>
         </thead>
+        {% if question %}
         <tbody>
             <tr class="table-row">
-                <td class="column-description">{{ question.description|e }}</td>
+                <td class="column-description">
+                    <textarea class="cell-input" name="description" cols="30" rows="2">
+                        {{ question.description }}
+                    </textarea>
+                </td>
                 <td class="column-status">
                     {% if question.status == 1 %}
-                        <span class="">опубликован</span>
-                    {% elseif  question.status == 2 %}
-                        <span class="">скрыт</span>
+                        <span class="cell-input">опубликован</span>
+                    {% elseif question.status == 2 %}
+                        <span class="cell-input">скрыт</span>
                     {% else %}
-                        <span class="">ожидает ответа</span>
+                        <span class="cell-input">ожидает ответа</span>
                     {% endif %}
                 </td>
             </tr>
         </tbody>
+        {% else %}
+        <tbody>
+            <tr class="table-row">
+                <td class="column-description">-</td>
+                <td class="column-status">-</td>
+            </tr>
+        </tbody>
+        {% endif %}
     </table>
 </div>
 <div class="answer-list">
@@ -28,6 +41,8 @@
     <div class="form-container">
         <form action="?/answer/add" method="POST">
             <textarea name="description" placeholder="Текст ответа" cols="30" rows="2"></textarea><br>
+            <input type="checkbox" name="status" value="1">
+            <label for="status">Опубликовать вопрос после ответа</label><br>
             <input type="hidden" name="question_id" value="{{ question.id }}">
             <input type="submit" name="add" value="Добавить">
         </form>

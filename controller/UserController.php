@@ -123,17 +123,15 @@ class UserController extends Controller {
         }
     }
     
-    public function getUser($userName)
+    public function getUser($userData)
     {//функция ищет пользователя по имени или создает нового
-        $user = $this -> getUserByName($userName);
+        $user = $this -> getUserByName($userData['user_name']);
         if (!isset($user)) {
             $userModel = new User();
-            $userData = [];
-            $userData['user_name'] = $userName;
             $userData['password'] = '';
             $userData['is_admin'] = 0;
             if ($userModel -> add($userData)) {
-                $user = $userModel -> getByName($userName);
+                $user = $userModel -> getByName($userData['user_name']);
             } else {
                 $user = NULL;
             }

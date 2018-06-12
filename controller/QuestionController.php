@@ -19,10 +19,9 @@ class QuestionController extends Controller
         $question = new Question();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
-            $user = $userController -> getUser($this -> data['user_name']);
+            $user = $userController -> getUser($this -> data);
             $this -> data['status'] = 0;
             $this -> data['user_id'] = $user['id'];
-echo 'Q.add.data=';var_dump($this -> data);echo '===<br>';
             $question -> add($this -> data);
             $this -> getList();
         }
@@ -45,10 +44,11 @@ echo 'Q.add.data=';var_dump($this -> data);echo '===<br>';
         $question = new Question();
         if (count($params) > 0) {
             $this -> parseData($params, $this -> data);
+//echo 'Q.update.params=';var_dump($this -> data);echo '++<br>';exit;
             $id = $this -> data['id'];
             if (count($this -> errors) == 0) {
                 $question -> update($id, $this -> data);
-                $this -> getList();
+                $this -> getByCategory($this -> data['category_id']);
             }
         }
         $question = NULL;
