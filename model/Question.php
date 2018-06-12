@@ -113,7 +113,7 @@ class Question extends Model
                         questions.status AS status,
                         questions.category_id,
                         questions.user_id,
-                        users.login AS user_name,
+                        users.login AS user_name
                     FROM
                         questions 
                     INNER JOIN
@@ -158,6 +158,39 @@ class Question extends Model
         $params = [
             ':category_id' => $category_id
         ];
+        $this -> recordset = $this -> doRequest($request, $params);
+        if (!isset($this -> recordset)) {
+            echo 'questions not selected';
+            return NULL;
+        }
+        return $this -> recordset;
+    }
+    
+    public function getUnanswered()
+    {
+        $request = 'SELECT
+                        questions.id AS id,
+                        questions.description AS description,
+                        questions.date_added AS date_added,
+                        questions.status AS status,
+                        questions.category_id,
+                        questions.user_id,
+                        users.login AS user_name,
+                        categories.name AS category_name
+                    FROM
+                        questions 
+                    INNER JOIN
+                        users
+                    ON
+                        users.id=questions.user_id
+                    INNER JOIN
+                        categories
+                    ON
+                        categories.id=questions.category_id
+                    WHERE
+                        questions.status=0
+                    ORDER BY questions.date_added DESC';
+        $params = [];
         $this -> recordset = $this -> doRequest($request, $params);
         if (!isset($this -> recordset)) {
             echo 'questions not selected';

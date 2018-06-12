@@ -1,13 +1,4 @@
 <div class="question-list">
-    {% set catid=0 %}
-    {% for question in questions %}
-        {% set catid=question.category_id %}
-    {% endfor %}
-    {% for cat in categories %}
-        {% if cat.id == catid %}
-        <h3>Список вопросов по теме: {{ cat.name }}</h3>
-        {% endif %}
-    {% endfor %}
     <table class="table">
         <thead class="table-head">
             <tr class="header-row">
@@ -25,7 +16,7 @@
             <tr class="table-row">
                 <form action="?/question/update" method="post">
                     <td class="column-description">
-                        <input class="cell-input" type="text" name="description" value="{{ question.description|e }}">
+                        <textarea class="cell-input" name="description" cols="20" rows="2">{{ question.description|e }}</textarea>
                     </td>
                     <td class="column-status">
                         <select class="field-new-type" name="category_id">

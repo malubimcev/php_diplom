@@ -1,0 +1,14 @@
+<div class="question-list">
+    <a href="?/question/getUnanswered">Показать все вопросы без ответов</a>
+    {% set catid=0 %}
+    {% for question in questions %}
+        {% set catid=question.category_id %}
+    {% endfor %}
+    {% for cat in categories %}
+        {% if cat.id == catid %}
+        <h3>Список вопросов по теме: {{ cat.name }}</h3>
+        {% endif %}
+    {% endfor %}
+</div>
+
+

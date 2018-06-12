@@ -46,10 +46,8 @@ class QuestionController extends Controller
             $this -> parseData($params, $this -> data);
 //echo 'Q.update.params=';var_dump($this -> data);echo '++<br>';exit;
             $id = $this -> data['id'];
-            if (count($this -> errors) == 0) {
-                $question -> update($id, $this -> data);
-                $this -> getByCategory($this -> data['category_id']);
-            }
+            $question -> update($id, $this -> data);
+            $this -> getByCategory($this -> data['category_id']);
         }
         $question = NULL;
     }
@@ -112,6 +110,19 @@ class QuestionController extends Controller
         $category = NULL;
     }
 
+    public function getUnanswered()
+    {
+        $this -> parseData($params, $this -> data);
+        $question = new Question();
+        $category = new Category();
+        $this -> categories = $category -> getList();
+        $this -> questions = $question -> getUnanswered();
+        $this -> setTemplate('Unanswered');
+        $view = new QuestionView($this -> viewTemplate);
+        $view -> render($this -> questions, $this -> categories);
+        $question = NULL;
+        $category = NULL;
+    }
     
     private function updateStatus($id, $status)
     {
@@ -121,11 +132,11 @@ class QuestionController extends Controller
         $question = NULL;
     }
     
-    private function setTemplate()
+    private function setTemplate($param = '')
     {
         $app = Application::get();
         if ($app -> isAdminMode()) {
-            $this -> viewTemplate = 'questionsAdmin.twig';
+            $this -> viewTemplate = 'questionsAdmin'.$param.'.twig';
         } else {
             $this -> viewTemplate = 'questions.twig';
         }

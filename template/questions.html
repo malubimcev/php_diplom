@@ -1,24 +1,4 @@
 <div class="question-list">
-    <h3>Задайте вопрос</h3>
-    {% set catid=0 %}
-    {% for question in questions %}
-        {% set catid=question.category_id %}
-    {% endfor %}
-    {% for cat in categories %}
-        {% if cat.id == catid %}
-        <h3>{{ cat.name }}</h3>
-        {% endif %}
-    {% endfor %}
-    <div class="form-container">
-        <form action="?/question/add" method="POST">
-            <textarea name="description" placeholder="Текст вопроса" cols="30" rows="2"></textarea><br>
-            <input type="text" name="user_name" placeholder="Ваше имя"><br>
-            <input type="email" name="email" placeholder="Ваш E-mail"><br>
-            <input type="hidden" name="category_id" value="{{ catid }}">
-            <input type="submit" name="save" value="Добавить">
-        </form>
-    </div>
-    <h3>Список вопросов</h3>
     <table class="table">
         <thead class="table-head">
             <tr class="header-row">
