@@ -52,8 +52,15 @@ class CategoryController extends Controller
     public function getList()
     {
         $category = new Category();
-        $this -> categories = $category -> getList();
         $this -> setTemplate();
+        $vT = $this -> viewTemplate;
+        if ($vT == 'categoryList.twig') {
+            $this -> categories = $category -> getGroupped();
+        } else {
+            $this -> categories = $category -> getList();
+        }
+//echo '<br><br>vT='.$vT.'++<br>';
+//echo 'cats=';var_dump($this -> categories);echo '++<br>';//exit;        
         $view = new CategoryView($this -> viewTemplate);
         $view -> render($this -> categories);
         $category = NULL;

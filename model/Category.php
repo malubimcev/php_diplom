@@ -59,6 +59,17 @@ class Category extends Model
         }
     }
     
+    public function getGroupped()
+    {
+        $question = new Question();
+        $this -> recordset = $question -> getGroupped();
+        if (!empty($this -> recordset)) {
+            return $this -> recordset;
+        } else {
+            return FALSE;
+        }
+    }
+    
     public function getById($id)
     {
         $fields = 'id AS id,

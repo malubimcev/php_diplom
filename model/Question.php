@@ -198,6 +198,30 @@ class Question extends Model
         }
         return $this -> recordset;
     }
+
+    public function getGroupped()
+    {
+        $request = 'SELECT
+                        categories.name,
+                        categories.id,
+                        COUNT(questions.status) AS total_count
+                    FROM
+                        questions 
+                    INNER JOIN
+                        categories
+                    ON
+                        categories.id=questions.category_id
+                    GROUP BY
+                        categories.name';
+        $params = [
+            //':category_id' => $category_id
+        ];
+        $this -> recordset = $this -> doRequest($request, $params);
+        if (!isset($this -> recordset)) {
+            return NULL;
+        }
+        return $this -> recordset;
+    }
     
     public function deleteByCategory($category_id)
     {
